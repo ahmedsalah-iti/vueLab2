@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Template</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body id="mainapp" class="bg-gray-100 flex items-center justify-center min-h-screen ">
+    <!-- {{showUserData=true}} -->
+    <div v-if="showUserData" class="border border-blue-500 p-4 rounded-lg max-w-4xl mx-auto">
+        <h2 class="text-center text-xl font-bold mb-4">User Data</h2>
+        
+        <div class="mb-4">
+          <p class="text-gray-700"><span class="font-semibold">Title:</span> {{postData.title}}</p>
+        </div>
+      
+        <div class="mb-4">
+          <p class="text-gray-700"><span class="font-semibold">Content:</span> {{postData.content}}</p>
+        </div>
+      
+        <div class="mb-4">
+          <p class="text-gray-700"><span class="font-semibold">Category:</span> {{postData.category}}</p>
+        </div>
+      
+        <div class="mb-4">
+          <p class="text-gray-700"><span class="font-semibold">Series:</span> {{postData.serie}}</p>
+        </div>
+      
+        <div class="mb-4">
+          <p class="text-gray-700"><span class="font-semibold">Share Immediately:</span> {{postData.shareNow ? "Immediately" : "Later"}}</p>
+        </div>
+      
+        <div class="mb-4">
+          <p class="text-gray-700"><span class="font-semibold">Share to:</span> {{postData.shareOn.join(" , ")}}</p>
+        </div>
+      
+        <div class="flex justify-between">
+          <button @click="showUserData=false" type="button" class="bg-blue-500 text-white px-4 py-2 rounded-md w-1/2 mr-2">Prev</button>
+          <button type="button" class="bg-yellow-500 text-white px-4 py-2 rounded-md w-1/2 ml-2">Submit</button>
+        </div>
+      </div>
+  <form v-if="!showUserData" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg md:max-w-md lg:max-w-xl mx-4">
+    <div class="mb-4">
+      <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+      <input v-model="postData.title" type="text" id="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Title">
+    </div>
+    <div class="mb-4">
+      <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
+      <textarea v-model="postData.content" id="content" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Content" rows="2"></textarea>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Category</label>
+      <div class="flex items-center mb-2" v-for="cat in categories">
+        <input v-model="postData.category" type="radio" :id="cat" name="category" :value="cat" class="mr-2 leading-tight">
+        <label :for="cat" class="text-gray-700">{{cat}}</label>
+      </div>
+
+      </div>
+    </div>
+    <div class="mb-4">
+      <label for="series" class="block text-gray-700 text-sm font-bold mb-2">Series:{{postData.serie}}</label>
+      <select v-model="postData.serie" id="series" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+        <option  v-for="serie in series" :value="serie">{{serie}}</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2">Share on</label>
+      <div class="flex items-center mb-2" v-for="social in socials">
+        <input v-model="postData.shareOn" type="checkbox" :id="social" name="share" :value="social" class="mr-2 leading-tight">
+        <label :for="social" class="text-gray-700">{{social}}</label>
+      </div>
+    </div><hr>
+    <div class="flex items-center">
+        <input v-model="postData.shareNow" type="checkbox" id="shareImmediately" name="share" value="shareImmediately" class="mr-2 leading-tight">
+        <label for="shareImmediately" class="text-gray-700">Share Immediately ?</label>
+      </div><hr><br>
+    <div class="flex items-center justify-between">
+        <!-- {{postData}} -->
+         <!-- {{validate()}} -->
+         <button @click="showUserData=true" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" :class="validate().length > 0 ? 'opacity-50 cursor-not-allowed' : ''">
+            Next
+          </button>
+    </div>
+  </form>
+  <script>
+    const app = Vue.createApp({
+        updated(){},
+        data:()=>({
+            message:"test",
+            categories:["Testing","Developing","Networking","Designing"],
+            series:["First Edition","Gold Edition","VIP Edition"],
+            socials:["facebook","twitter","linkedIn","whatsApp"],
+            postData:{
+                title:"",
+                content:"",
+                category:"",
+                serie:"First Edition",
+                shareOn:[],
+                shareNow:false
+            },
+            showUserData:false
+        }),
+        methods:{
+            validate(){
+                const errArr = Array();
+                if (!this.postData.title){
+                    errArr.push("missing title");
+                }
+                if (!this.postData.content){
+                    errArr.push("missing content");
+                }
+                if (!this.postData.category && !this.categories.includes(this.postData.category)){
+                    errArr.push("missing category");
+                }
+                if (!this.postData.serie && !this.series.includes(this.postData.serie)){
+                    errArr.push("missing serie");
+                }
+                if (this.postData.shareOn.length < 1){
+                    errArr.push("missing Share On platform");
+                }
+                return errArr;
+            }
+        },
+        computed:{},
+        watch:{}
+    });
+    app.mount("#mainapp");
+  </script>
+</body>
+</html>
