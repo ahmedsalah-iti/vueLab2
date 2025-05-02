@@ -80,7 +80,7 @@
     <div class="flex items-center justify-between">
         <!-- {{postData}} -->
          <!-- {{validate()}} -->
-         <button @click="showUserData=true" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" :class="validate().length > 0 ? 'opacity-50 cursor-not-allowed' : ''">
+         <button :disabled="validate().length > 0" @click="showUserData=true" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" :class="validate().length > 0 ? 'opacity-50 cursor-not-allowed' : ''">
             Next
           </button>
     </div>
@@ -89,7 +89,6 @@
     const app = Vue.createApp({
         updated(){},
         data:()=>({
-            message:"test",
             categories:["Testing","Developing","Networking","Designing"],
             series:["First Edition","Gold Edition","VIP Edition"],
             socials:["facebook","twitter","linkedIn","whatsApp"],
